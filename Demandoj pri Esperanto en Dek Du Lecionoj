@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="eo">
+<head>
+  <meta charset="UTF-8">
+  <title>DEMANDOJ PRI ESPERANTO EN DEK DU LECIONOJ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1f2933 0, #020617 55%, #000 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #f9fafb;
+    }
+
+    .tv-frame {
+      position: relative;
+      max-width: 1200px;
+      width: 96%;
+      background: radial-gradient(circle at top left, #5b4334, #2b1b12 60%, #1b120d 100%);
+      border-radius: 28px;
+      padding: 24px 32px 40px;
+      border: 8px solid #100a07;
+      box-shadow:
+        0 26px 60px rgba(0,0,0,0.8),
+        0 0 0 2px rgba(0,0,0,0.5);
+    }
+
+    .tv-brand {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: #f8e4b0;
+      text-shadow: 0 1px 0 #433024;
+      white-space: nowrap;
+    }
+
+    .tv-knobs {
+      position: absolute;
+      right: 14px;
+      bottom: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .tv-knob {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #f5f1e1, #b59a6a 45%, #6f5735 80%, #2a1c11 100%);
+      box-shadow:
+        inset 0 0 0 3px rgba(0,0,0,0.4),
+        0 6px 10px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .tv-knob::after {
+      content: "";
+      position: absolute;
+      width: 3px;
+      height: 14px;
+      background: #1a1714;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+    }
+
+    .tv-knob.small {
+      width: 30px;
+      height: 30px;
+    }
+
+    .screen {
+      background: radial-gradient(circle at top, #111827, #020617 70%);
+      border-radius: 20px;
+      padding: 18px 18px 18px 18px;
+      box-shadow:
+        inset 0 0 30px rgba(0,0,0,0.9),
+        0 0 0 2px rgba(0,0,0,0.8);
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 880px) {
+      .screen {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .tv-knobs {
+        display: none;
+      }
+    }
+
+    .questions {
+      display: flex;
+      flex-direction: column;
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .questions-header {
+      margin-bottom: 10px;
+    }
+
+    .questions-header h1 {
+      font-size: 1.05rem;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: #bbf7d0;
+    }
+
+    .questions-header p {
+      margin: 0;
+      font-size: 0.83rem;
+      color: #e5e7eb;
+      opacity: 0.9;
+    }
+
+    .lesson-title {
+      margin: 10px 0 4px;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      border-top: 1px solid rgba(148,163,184,0.4);
+      padding-top: 8px;
+    }
+
+    details.question-card {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
+      border-radius: 12px;
+      padding: 8px 10px 8px;
+      margin-bottom: 6px;
+      border: 1px solid rgba(148,163,184,0.25);
+      transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    details.question-card[open] {
+      border-color: #22c55e;
+      background: radial-gradient(circle at top left, rgba(15,23,42,1), rgba(6,78,59,0.85));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.7);
+      transform: translateY(-1px);
+    }
+
+    .question-card summary {
+      list-style: none;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .question-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .question-number {
+      font-weight: 600;
+    }
+
+    .question-toggle-label {
+      font-size: 0.72rem;
+      color: #facc15;
+    }
+
+    .question-text {
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-top: 2px;
+    }
+
+    .answer {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148,163,184,0.6);
+      font-size: 0.9rem;
+      color: #f9fafb;
+    }
+
+    .answer small {
+      font-size: 0.78rem;
+      opacity: 0.9;
+    }
+
+    .presenter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      padding: 8px 10px;
+      gap: 10px;
+    }
+
+    .presenter-figure {
+      position: relative;
+      width: 150px;
+      height: 180px;
+      margin-top: 4px;
+    }
+
+    .presenter-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(34,197,94,0.4), transparent 60%);
+      filter: blur(2px);
+    }
+
+    .presenter-body {
+      position: absolute;
+      inset: 18px 26px 12px;
+      background: linear-gradient(to bottom, #0f172a, #020617);
+      border-radius: 999px;
+      box-shadow:
+        0 0 0 2px rgba(15,23,42,0.9),
+        0 14px 22px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 24px;
+      overflow: hidden;
+    }
+
+    .presenter-head {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #fde68a, #f59e0b 55%, #b45309 100%);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .presenter-head::before,
+    .presenter-head::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #111827;
+      top: 22px;
+    }
+
+    .presenter-head::before {
+      left: 14px;
+    }
+
+    .presenter-head::after {
+      right: 14px;
+    }
+
+    .presenter-mouth {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 10px;
+      border-radius: 0 0 24px 24px;
+      border-bottom: 3px solid #b91c1c;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+    }
+
+    .presenter-mic {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 46px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at top, #e5e7eb, #9ca3af 50%, #4b5563 100%);
+      box-shadow:
+        0 4px 8px rgba(0,0,0,0.9),
+        inset 0 0 0 2px rgba(15,23,42,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .presenter-mic-grid {
+      width: 28px;
+      height: 34px;
+      border-radius: 999px;
+      background-image: radial-gradient(circle, rgba(30,64,175,0.9) 1px, transparent 1px);
+      background-size: 5px 5px;
+      background-position: 0 0;
+    }
+
+    .presenter-text {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .presenter-title {
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin-bottom: 4px;
+    }
+
+    .presenter-main {
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+
+    .presenter-bubble {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.85);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .presenter-bubble strong {
+      color: #22c55e;
+    }
+
+    .presenter-footer {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      opacity: 0.9;
+    }
+
+    .presenter-footer span {
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    /* Scrollbar (estético) */
+    .questions::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .questions::-webkit-scrollbar-track {
+      background: rgba(15,23,42,0.8);
+      border-radius: 999px;
+    }
+
+    .questions::-webkit-scrollbar-thumb {
+      background: linear-gradient(#22c55e, #0ea5e9);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-frame">
+    <div class="tv-brand">TELEFUNKEN</div>
+
+    <div class="tv-knobs">
+      <div class="tv-knob"></div>
+      <div class="tv-knob small"></div>
+    </div>
+
+    <div class="screen">
+      <!-- Lado esquerdo: perguntas -->
+      <section class="questions">
+        <header class="questions-header">
+          <h1>DEMANDOJ PRI ESPERANTO EN DEK DU LECIONOJ</h1>
+          <p>Kliku maldekstre sur demando por montri la respondon (kviz-stilo).</p>
+        </header>
+
+        <!-- LIÇÃO 1 -->
+        <h2 class="lesson-title">LIÇÃO 1</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu estas Marko?</div>
+          </summary>
+          <div class="answer">
+            Li estas studento kaj atleto.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kie laboras la patro de Marko?</div>
+          </summary>
+          <div class="answer">
+            En hotelo.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kio estas la profesio de la patrino de Marko?</div>
+          </summary>
+          <div class="answer">
+            Ŝi estas instruistino.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kio estas sur la skribotablo de Marko?</div>
+          </summary>
+          <div class="answer">
+            Sur tablo estas paperoj kaj libro.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 5</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiaj libroj estas sur la tablo?</div>
+          </summary>
+          <div class="answer">
+            La libroj sur la tablo estas lernolibroj.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 2 -->
+        <h2 class="lesson-title">LIÇÃO 2</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiel nomiĝas la amikino de Marko?</div>
+          </summary>
+          <div class="answer">
+            Ŝia nomo estas Ana.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiel ŝi aspektas?</div>
+          </summary>
+          <div class="answer">
+            Ŝi estas juna kaj bela.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kion faris la amikino de Marko ĉe lia domo?</div>
+          </summary>
+          <div class="answer">
+            Ŝi iris al lia domo por paroli kun li.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiam Marko rigardas Anan, kion ni povas rimarki?</div>
+          </summary>
+          <div class="answer">
+            Ke li amas ŝin.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 3 -->
+        <h2 class="lesson-title">LIÇÃO 3</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kien Marko kaj Ana decidis iri?</div>
+          </summary>
+          <div class="answer">
+            Ili decidis iri en kafejon por manĝi kukon.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiom da mono Marko diris, ke li havas?</div>
+          </summary>
+          <div class="answer">
+            Li diris, ke li havas cent dolarojn.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kio okazis ĉe la kafejo kiam Ana kaj Marko finmanĝis la kukon?
+            </div>
+          </summary>
+          <div class="answer">
+            Marko rimarkis, ke li ne havas monon.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 4 -->
+        <h2 class="lesson-title">LIÇÃO 4</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu estas Vera?</div>
+          </summary>
+          <div class="answer">
+            La fratino de Ana.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kie estis Vera?</div>
+          </summary>
+          <div class="answer">
+            <small>Respondo ne provizita en la teksto – vi povas poste aldoni ĉi tie.</small>
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kion faris Vera en la ĉambro de Ana?</div>
+          </summary>
+          <div class="answer">
+            Ŝi legis la leteron, kiun Marko skribis al Ana.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kion vi pensas pri tio, kion Vera faris?</div>
+          </summary>
+          <div class="answer">
+            La sinteno de Vera estis malkonvena ĉar oni ne devus entrudiĝi en la privatecon de homoj.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 5 -->
+        <h2 class="lesson-title">LIÇÃO 5</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu estas Sinjoro Rapid?</div>
+          </summary>
+          <div class="answer">
+            Li estas amiko de Marko.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kien li eniris?</div>
+          </summary>
+          <div class="answer">
+            Li eniris vendejon de aŭtoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Ĉu sinjoro Rapid aĉetis aŭton? Kial?</div>
+          </summary>
+          <div class="answer">
+            S-ro Rapid ne aĉetis aŭton ĉar li konsideris ilin tro multekostaj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion vere volis sinjoro Rapid ĉe la aŭtovendejo?
+            </div>
+          </summary>
+          <div class="answer">
+            Li volis flirti kun la virino en la vendejo.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 6 -->
+        <h2 class="lesson-title">LIÇÃO 6</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kion diras la teksto pri Maja?</div>
+          </summary>
+          <div class="answer">
+            Maja estas beleta junulino kaj ĉiuj ŝiaj amikoj amas ŝin.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kio okazis antaŭ tri tagoj kun Maja?
+            </div>
+          </summary>
+          <div class="answer">
+            Antaŭ tri tagoj malbono okazis: sur strato aŭto faligis ŝin.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion faris la patrino de Maja por solvi la problemon?
+            </div>
+          </summary>
+          <div class="answer">
+            Ŝi vokis la kuraciston por ekzameni sian filinon.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kiuj estis la rekomendoj de la kuracisto?
+            </div>
+          </summary>
+          <div class="answer">
+            La kuracisto diris al ŝi resti hejme dum semajno, ripozi trankvile,
+            trinki teon matene kaj vespere.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 7 -->
+        <h2 class="lesson-title">LIÇÃO 7</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion malŝatas la instruistino de Marko?
+            </div>
+          </summary>
+          <div class="answer">
+            Ŝi malŝatas lernantojn alvenantajn malfrue al la lernejo.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion faris Marko kiam li vekiĝis tiun tagon,
+              kiam li ne volis malfrui al la lernejo?
+            </div>
+          </summary>
+          <div class="answer">
+            Li rapide metis la vestaĵon, rapidege li trinkis la kafon.
+            Poste, kun la libroj en la mano, li kuris kaj saltis laŭ la strato.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion diris homoj, kiam ili vidis Markon kuri tiel rapide
+              por atingi la lernejon?
+            </div>
+          </summary>
+          <div class="answer">
+            La homoj rigardis lin kaj diris: “Kia malsaĝa knabo.”
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial la lernejo estis fermita kiam Marko alvenis?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar estis dimanĉo kaj li ne rimarkis.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 8 -->
+        <h2 class="lesson-title">LIÇÃO 8</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial la patrino de Marko estis maltrankvila?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar estis la tago kiam Marko devis reveni hejmen kun siaj lernejaj notoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kial Marko estis malĝoja?</div>
+          </summary>
+          <div class="answer">
+            Ĉar li ne ricevis bonajn notojn en la lernejo,
+            kaj lia patrino estis maltrankvila kaj malĝoja.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kia estis la reago de la patrino de Marko
+              kiam ŝi eksciis pri liaj lernejaj notoj?
+            </div>
+          </summary>
+          <div class="answer">
+            Ŝi diris al li iri al sia ĉambro por studi.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Pri kio pensis Marko dum li studis en sia ĉambro?
+            </div>
+          </summary>
+          <div class="answer">
+            Li pensis nur pri ludado kun siaj amikoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 5</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kion Marko diris al si pri si mem?</div>
+          </summary>
+          <div class="answer">
+            “Ĉu mi estas tiom malsaĝa, kvankam mi lernis multe?”
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 6</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion lia patrino rakontis al li pri lia lerneja laboro?
+            </div>
+          </summary>
+          <div class="answer">
+            Lia patrino diris, ke li bezonas studi pli.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 9 -->
+        <h2 class="lesson-title">LIÇÃO 9</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion decidis fari Petro kaj Maria en sia libera tempo?
+            </div>
+          </summary>
+          <div class="answer">
+            Ili decidis vojaĝi al Italio.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiaj estas la urboj en Italio?</div>
+          </summary>
+          <div class="answer">
+            Antikvaj kaj belaj urboj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion Petro sugestas ne forgesi kunporti dum la trajnvojaĝo al Italio?
+            </div>
+          </summary>
+          <div class="answer">
+            La libron por lerni Esperanton.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial ili ne vojaĝos al Italio per trajno?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar la riĉa onklo de Maria pruntedonis al ŝi sian propran aŭton
+            por uzi dum la vojaĝo.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 5</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial ili ne povas vojaĝi al Italio per aŭto?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar Petro ne scias veturi per aŭto.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 10 -->
+        <h2 class="lesson-title">LIÇÃO 10</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu grava evento estas organizata?</div>
+          </summary>
+          <div class="answer">
+            La naskiĝtago de la patro de Marko.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion petas la patrino de Marko de li?
+            </div>
+          </summary>
+          <div class="answer">
+            Ke li helpu ŝin ordigi la domon, almenaŭ ke li ordigu sian propran ĉambron.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu ĉeestos la naskiĝtagan feston?</div>
+          </summary>
+          <div class="answer">
+            Kelkaj familianoj kaj kelkaj amikoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion respondis Marko al sia patrino pri la helpo, kiun ŝi petis?
+            </div>
+          </summary>
+          <div class="answer">
+            Marko diris, ke li helpos kun la aĉetado, sed li preferus eliri
+            kun siaj klubaj amikoj anstataŭ paroli kun neinteresaj familianoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 5</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion proponas fari Marko por ne tute maltrafi la naskiĝtagan feston?
+            </div>
+          </summary>
+          <div class="answer">
+            Li proponis manĝi kun ĉiuj kaj poste iri ekskursi kun siaj klubaj amikoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 6</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kio igis Markon ŝanĝi sian opinion kaj decidi resti ĉe la naskiĝtaga festo?
+            </div>
+          </summary>
+          <div class="answer">
+            Li ŝanĝis sian opinion kiam li eksciis, ke Ana venos al la festo.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 11 -->
+        <h2 class="lesson-title">LIÇÃO 11</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kia estas la placo de Venecio, laŭ la teksto?
+            </div>
+          </summary>
+          <div class="answer">
+            La placo estas tre okupata de junuloj, gravaj sinjorinoj, maristoj,
+            fremduloj, vojaĝantoj kaj gondolistoj.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Gondolisto staras en la placo. Kiel oni povas scii,
+              ke li laboras por riĉulo?
+            </div>
+          </summary>
+          <div class="answer">
+            Per la vestaĵoj, kiujn li portas.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiun renkontas la gondolisto?</div>
+          </summary>
+          <div class="answer">
+            Li vidas mariston kaj rekonas lin; lia nomo estas Stefano.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kiu estas la sentima?</div>
+          </summary>
+          <div class="answer">
+            La gondolisto.
+          </div>
+        </details>
+
+        <!-- LIÇÃO 12 -->
+        <h2 class="lesson-title">LIÇÃO 12</h2>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 1</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">Kia estis S-ro Pipelbom?</div>
+          </summary>
+          <div class="answer">
+            S-ro Pipelbom estis alta, dika, peza kaj larĝa.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 2</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial homoj eble timus aŭ respektus lin?
+            </div>
+          </summary>
+          <div class="answer">
+            Pro lia impona aspekto.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 3</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial S-ro Pipelbom malamis la naturon nokte?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar li malfacile marŝis inter la arboj,
+            ĉar li ne povis silente pasi pro sia dika kaj peza korpo.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 4</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kiu observis sinjoron Pipelbom dum li marŝis tra la densa arbaro?
+            </div>
+          </summary>
+          <div class="answer">
+            Du policistoj: viro kaj virino, kiuj deĵoris.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 5</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kia estis la reago de sinjoro Pipelbom
+              kiam la policistoj pridemandis lin?
+            </div>
+          </summary>
+          <div class="answer">
+            Li nervoziĝis kaj balbutis.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 6</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kial la policistoj deĵoris en tiu loko?
+            </div>
+          </summary>
+          <div class="answer">
+            Ĉar la grafino riskis esti kaptita de teroristoj kaj la kastelo
+            estis sub polica protekto.
+          </div>
+        </details>
+
+        <details class="question-card">
+          <summary>
+            <div class="question-meta">
+              <span class="question-number">Demando 7</span>
+              <span class="question-toggle-label">▶ Montri / kaŝi respondon</span>
+            </div>
+            <div class="question-text">
+              Kion laŭ vi faris sinjoro Pipelbom en tiu loko?
+            </div>
+          </summary>
+          <div class="answer">
+            resposta livre.
+          </div>
+        </details>
+      </section>
+
+      <!-- Lado direito: apresentador -->
+      <aside class="presenter">
+        <div class="presenter-figure">
+          <div class="presenter-glow"></div>
+          <div class="presenter-body">
+            <div class="presenter-head">
+              <div class="presenter-mouth"></div>
+            </div>
+            <div class="presenter-mic">
+              <div class="presenter-mic-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="presenter-text">
+          <div class="presenter-title">Programa de kviz-ludo</div>
+          <div class="presenter-main">
+            DEMANDOJ PRI ESPERANTO EN DEK DU LECIONOJ
+          </div>
+
+          <div class="presenter-bubble">
+            <strong>Saluton!</strong><br>
+            Elektu demandojn maldekstre kaj kliku por montri la respondon.<br><br>
+            Vi povas uzi ĉi tiun ekranon en klaso, klubo aŭ inter amikoj
+            kiel programo de aŭdvida kvizo.
+          </div>
+
+          <div class="presenter-footer">
+            Konsileto: <span>premu F11</span> en la retumilo por montri plenekrane
+            dum vi animas la “programon de televido”.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</body>
+</html>
